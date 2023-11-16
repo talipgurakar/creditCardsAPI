@@ -1,5 +1,6 @@
 - Proje kodları http://github.com/talipgurakar/creditCardsAPI adresinde bulunmaktadır.
 
+- https://www.loom.com/share/3e08daccab204278b1bc8bd25dd6032d linkindeki videoda mimarisini anlattım.
 
 - Bu proje POSTGRESQL Database kullanıyor.
 - dbTables.sql dosyasındaki tabloların create edilmesi gerekiyor.
