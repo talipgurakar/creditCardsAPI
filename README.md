@@ -1,3 +1,14 @@
+- Bu proje POSTGRESQL Database kullanıyor.
+- dbTables.sql dosyasındaki tabloların create edilmesi gerekiyor.
+
+- Node Versiyon 16 ve üstü olmalı
+- Nest.js kütüphanesi kullanıldı.
+
+
+
+
+
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
