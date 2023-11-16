@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCustomerDto } from './dto/create-customer.dto';
-import { UpdateCustomerDto } from './dto/update-customer.dto';
 
 import Pool from '../database/dbPool'
 import { DataBaseException } from 'src/database/database.exception';
@@ -44,13 +43,5 @@ export class CustomersService {
     } catch (error) {
       throw new DataBaseException('Customer could not be fetched from database!');
     }
-  }
-
-  update(id: number, updateCustomerDto: UpdateCustomerDto) {
-    return `This action updates a #${id} customer`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} customer`;
   }
 }

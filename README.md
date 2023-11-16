@@ -1,11 +1,87 @@
+- Proje kodları http://github.com/talipgurakar/creditCardsAPI adresinde bulunmaktadır.
+
+
 - Bu proje POSTGRESQL Database kullanıyor.
 - dbTables.sql dosyasındaki tabloların create edilmesi gerekiyor.
 
-- Node Versiyon 16 ve üstü olmalı
+- Node Versiyon 16 ve üstü olmalı.
 - Nest.js kütüphanesi kullanıldı.
 
+- Vs Code da proje "npm run start:dev" komutuyla çalıştırılır.
+
+- Vs Code da yüklenen Thunder Client aracılığıyla API ler çalıştırılıyor.
 
 
+- GET  - http://localhost:3000/customers - müşterilerin hepsini çekiyor.
+- GET  - http://localhost:3000/customers/1 - ilgili müşteri bilgilerini çekiyor.
+- POST - http://localhost:3000/customers - yeni müşteri bilgisi ekliyor.
+ ( 
+  Body JSON kısmına aşağıdaki kod yazılarak denenebilir.
+   " 
+   {
+      "GovernmentID" : "63163052804", 
+      "Name" : "Talip",
+      "Surname" : "Gürakar", 
+      "Foreigner" : false, 
+      "BirthDate" : "1983-03-12"
+    }
+   "
+ )
+
+- GET  - http://localhost:3000//creditcards - kredi kartlarının hepsini çekiyor.
+- GET  - http://localhost:3000//creditcards/1 - ilgili kredi kartı bilgilerini çekiyor.
+- POST - http://localhost:3000/creditcards - yeni kredi kartı bilgisi ekliyor.
+(
+  Body JSON kısmına aşağıdaki kod yazılarak denenebilir. - 
+  "
+    {
+      "customerID": "18",
+      "cardType": "1",
+      "cardNumber": "1234432156788765",
+      "cardHolderName": "Yağmur Gürakar",
+      "expiryMonth": "3",
+      "expiryYear": "2025",
+      "cvv": "234",
+      "accountCutOffDate": "2023-11-20",
+      "lastPaymentDate": "2023-11-30",
+      "isMailTelephoneOrderEnabled": false,
+      "isInternetOrderEnabled": false,
+      "isAbroadUsageEnabled": false
+    }
+  "
+
+  cardType - normalde front endden gelecek visa, mastercard şeklinde ama default 1 gönderdim.
+)
+
+- PATCH - http://localhost:3000/creditcards/1/updatelimit - ilgili "1" nolu kredi kartının limit bilgisi güncelleniyor.
+(
+  Body JSON kısmına aşağıdaki kod yazılarak denenebilir.
+  "
+  {
+    "cardId" : "1", 
+    "cardLimit" : "150000"
+  }
+  "
+)
+
+- POST - http://localhost:3000/creditcards/createtransaction - kredi kartından harcama yapılıyor.
+ (
+  Body JSON kısmına aşağıdaki kod yazılarak denenebilir.
+  "
+  {
+    "cardNumber": "1234432156788765",
+    "cardHolderName": "Yağmur Gürakar",
+    "expiryMonth": "3",
+    "expiryYear": "2025",
+    "cvv": "234",
+    "amount": "25000",
+    "merchant": "MİGROS",
+    "category": "1"
+  }
+  "
+)
+
+- GET  - http://localhost:3000//creditcards/4/createtransaction - ilgili "4" nolu kredi kartının harcama bilgilerini çekiyor.
 
 
 

@@ -1,6 +1,5 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateCreditcardDto } from './dto/create-creditcard.dto';
-import { UpdateCreditcardDto } from './dto/update-creditcard.dto';
 import { UpdateLimitDto } from './dto/update-creditcard-limit.dto';
 import { CreateTransactionDto } from './dto/create-creditcard-transaction.dto';
 import Pool from '../database/dbPool'
@@ -33,12 +32,9 @@ export class CreditcardsService {
     return card;
   }
 
-  update(id: number, updateCreditcardDto: UpdateCreditcardDto) {
-    return `This action updates a #${id} creditcard`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} creditcard`;
+  async findTransactionsByCardId(id: number) {
+    const card = (await Pool.query('SELECT * FROM CreditCard C, CreditCardTransaction T WHERE C.id = T.cardid AND C.id = $1', [id])).rows
+    return card;
   }
 
   async updateLimit(updateLimitDto: UpdateLimitDto) {
@@ -47,7 +43,7 @@ export class CreditcardsService {
 
       return { cardNumber: updateLimitDto.cardId, newCardLimit: updateLimitDto.cardLimit };
     } catch (error) {
-      throw new InternalServerErrorException('Credit Card Limit could not be updated!');
+      throw new DataBaseException('Credit Card Limit could not be updated!');
     }
   }
 

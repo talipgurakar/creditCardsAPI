@@ -1,13 +1,13 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException } from '@nestjs/common';
 import { CreditcardsService } from './creditcards.service';
+import { CustomersService } from '../customers/customers.service';
 import { CreateCreditcardDto } from './dto/create-creditcard.dto';
-import { UpdateCreditcardDto } from './dto/update-creditcard.dto';
 import { UpdateLimitDto } from './dto/update-creditcard-limit.dto';
 import { CreateTransactionDto } from './dto/create-creditcard-transaction.dto';
 
 @Controller('creditcards')
 export class CreditcardsController {
-  constructor(private readonly creditcardsService: CreditcardsService) { }
+  constructor(private readonly creditcardsService: CreditcardsService, private readonly customersService: CustomersService) { }
 
   @Post()
   async create(@Body() createCreditcardDto: CreateCreditcardDto) {
@@ -15,6 +15,11 @@ export class CreditcardsController {
 
     if (existingCard) {
       throw new BadRequestException('Credit Card already exists!');
+    }
+
+    const existingCustomer = await this.customersService.findOne(+createCreditcardDto.customerID);
+    if (!existingCustomer) {
+      throw new BadRequestException('Customer does not exist!');
     }
 
     return this.creditcardsService.create(createCreditcardDto);
@@ -30,14 +35,9 @@ export class CreditcardsController {
     return this.creditcardsService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCreditcardDto: UpdateCreditcardDto) {
-    return this.creditcardsService.update(+id, updateCreditcardDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.creditcardsService.remove(+id);
+  @Get(':id/createtransaction')
+  findTransactionByCardId(@Param('id') id: string) {
+    return this.creditcardsService.findTransactionsByCardId(+id);
   }
 
   @Patch(':id/updatelimit')
@@ -46,6 +46,8 @@ export class CreditcardsController {
     if (!existingCard) {
       throw new BadRequestException('Credit Card does not exists!');
     }
+    this.validateCardLimit(updateLimitDto, existingCard);
+
     return this.creditcardsService.updateLimit(updateLimitDto);
   }
 
@@ -57,7 +59,7 @@ export class CreditcardsController {
     }
     this.validateCardTransaction(createTransactionDto, existingCard);
 
-    return this.creditcardsService.createTransaction(existingCard.Id, createTransactionDto);
+    return this.creditcardsService.createTransaction(existingCard.id, createTransactionDto);
   }
 
   private validateCardTransaction(createTransactionDto: CreateTransactionDto, existingCard: any) {
@@ -72,8 +74,14 @@ export class CreditcardsController {
     if (+createTransactionDto.amount <= 0) {
       throw new BadRequestException('Invalid amount');
     }
-    if (+createTransactionDto.amount > existingCard.cardLimit - existingCard.cardbalance) {
+    if (+createTransactionDto.amount > existingCard.cardlimit - existingCard.cardbalance) {
       throw new BadRequestException('Insufficient balance');
+    }
+  }
+
+  private validateCardLimit(updateLimitDto: UpdateLimitDto, existingCard: any) {
+    if (+updateLimitDto.cardLimit < existingCard.cardbalance) {
+      throw new BadRequestException('Card limit can not be less than card balance!');
     }
   }
 }
